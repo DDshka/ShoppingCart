@@ -60,4 +60,7 @@ urlpatterns = [
 
   url(r'^updateCategory/(?P<pk>\d+)', UpdateCategory.as_view(),
       name="update-category"),
+
+  url(r'^addUser$', AddUser.as_view(),
+      name="add-user")
 ]

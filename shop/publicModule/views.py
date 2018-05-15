@@ -50,9 +50,13 @@ class CartDelete(View):
     return HttpResponse("Get not supported")
 
   def post(self, request, index: int):
-    del request.session['products'][int(index)]
-    request.session.modified = True
-    return redirect("/cart")
+    try:
+      del request.session['products'][int(index)]
+      request.session.modified = True
+    except:
+      print("something wrong in CartDelete post method.")
+    finally:
+      return redirect("/cart")
 
 
 class CartView(TemplateView):

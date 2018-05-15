@@ -211,3 +211,9 @@ class UpdateCategory(UpdateView):
   model = Category
   fields = ('name', 'description')
   template_name = 'admin/admin_add_category.html'
+
+
+class AddUser(CreateView):
+  model = User
+  fields = ('info',)
+  template_name = 'admin/admin_add_image.html'

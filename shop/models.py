@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib.sessions.backends.db import SessionStore as DBStore
 from django.contrib.sessions.base_session import AbstractBaseSession
 from django.db import models
@@ -56,12 +58,10 @@ class Product(BaseModel):
   primary_image = models.ForeignKey(Image,
                                     related_name='primary_image',
                                     on_delete=models.SET_NULL,
-                                    null=True,
-                                    blank=True)
+                                    null=True)
   images = models.ManyToManyField(Image,
                                   related_name='images',
-                                  null=True,
-                                  blank=True)
+                                  null=True)
 
   def __str__(self):
     return self.name
@@ -73,6 +73,11 @@ class Product(BaseModel):
       return Product.from_json(*serialized_products)
     except KeyError:
       return []
+
+
+class User(BaseModel):
+  id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+  info = models.TextField()
 
 
 class CustomSession(AbstractBaseSession):

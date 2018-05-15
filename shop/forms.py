@@ -26,25 +26,30 @@ class ProductForm(forms.ModelForm):
       'categories': forms.CheckboxSelectMultiple(),
     }
 
-  # def save(self, commit=True):
-  #   name = self.cleaned_data.get('name')
-  #   description = self.cleaned_data.get('description')
-  #   categories = self.cleaned_data.get('categories')
-  #   price = self.cleaned_data.get('price'),
-  #   primary_image = self.cleaned_data.get('primary_image'),
-  #   images = self.cleaned_data.get('images')
-  #
-  #   Product.objects.raw('INSERT INTO shop_product (name, description, price, primary_image_id)'
-  #                       'VALUES (\'{0}\', \'{1}\', {2}, {3)'
-  #     .format(name, description, price, primary_image))
+  def save(self, commit=True) -> Product:
+    name = self.cleaned_data.get('name')
+    description = self.cleaned_data.get('description')
+    categories = self.cleaned_data.get('categories')
+    price = str(self.cleaned_data.get('price'))
+    primary_image = self.cleaned_data.get('primary_image')
+    images = self.cleaned_data.get('images')
 
-    # instance:Product = Product.objects.create(name=name,
-    #                                           description=description,
-    #                                           categories=categories,
-    #                                           price=price,
-    #                                           primary_image=primary_image,
-    #                                           images=images)
-    # instance.save()
+    instance: Product = Product.objects.create(name=name,
+                                               description=description,
+                                               price=price)
+    for category in categories:
+      instance.categories.add(category)
+
+    if primary_image:
+      instance.primary_image = primary_image
+
+    if images:
+      for image in images:
+        instance.images.add(image)
+
+    instance.save()
+
+    return instance
 
   def clean_primary_image(self):
     image_url = self.cleaned_data.get('primary_image')
@@ -97,11 +102,11 @@ class SearchForm(forms.Form):
   AVAILABLE_ORDERS = ("name", "-name", "price", "-price")
   DEFAULT_ORDER = "name"
 
-  q = forms.CharField(max_length=120,
+  q = forms.CharField(max_length=1024,
                       label="Search query",
                       widget=forms.TextInput(attrs={'class': 'form-control'}))
   categories = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-  order = forms.CharField(max_length=120)
+  order = forms.CharField(max_length=1024)
   page = forms.CharField(max_length=9999)
 
   def __init__(self, *args, **kwargs):

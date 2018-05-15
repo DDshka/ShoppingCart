@@ -28,5 +28,7 @@
         </div>
     {% if forloop.counter|dwr:4 == 0 %}
         </div>
+    {% elif forloop.last %}
+        </div>
     {% endif %}
 {% endfor %}
