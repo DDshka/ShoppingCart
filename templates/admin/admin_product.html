@@ -1,0 +1,50 @@
+{% extends "admin/admin_base.html" %}
+
+{% block meta %}
+	{{block.super}}
+    {% load bleach_tags %}
+{% endblock meta%}
+
+{% block head_title %} {{ product }} | {{ block.super }} {% endblock head_title %}
+
+{% block admin_content %} 
+	<div class="row" style="border-bottom: solid 1px lightgrey;">
+		<h1>{{product.name}}</h1>
+	</div>
+	<div class="row">
+		<div class="col-lg-10">
+			<ul class="list-inline">
+				{% for category in categories %}
+					{% if categories|length > 1 %}
+						<li>
+                            <a href="{% url 'admin-category-details' category.id %}">{{category}}</a>
+                            <form action="{% url 'remove-product-category' product.id category.id %}" method="post" style="display: inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </form>
+                        </li>
+					{% else %}
+						<li><a href="{% url 'admin-category-details' category.id %}">{{category}}</a></li>
+					{% endif %}
+				{% endfor %}
+				<li>
+                    <form action="{% url 'add-category-to-product-list' product.id %}" method="GET" style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </form>
+                </li>
+			</ul>
+            <h2>Description</h2>
+            <div>{{product.description|bleach}}</div>
+		</div>
+
+		<div class="col-lg-2">
+			<h2>Price:</h2>
+			<h4>{{product.price}}</h4>
+		</div>
+	</div>
+{% endblock admin_content %}

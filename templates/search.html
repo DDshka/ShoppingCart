@@ -1,0 +1,78 @@
+{% extends "public_base.html" %}
+
+{% block meta %} 
+	{{block.super}} 
+	{% load crispy_forms_tags %}
+    {% load templatehelpers %}
+{% endblock meta%}
+
+{% block head_title %} Search | {{ block.super }} {% endblock head_title %}
+
+{% block search %}
+	<div class="col-lg-4">
+	 	<form method="GET" action="{% url 'search' %}" class="form-horizontal">{% csrf_token %}
+		 		{{ form|crispy }}
+    		<button type="submit" class="btn btn-primary">Search</button>
+		</form>
+		<div style="border: solid 1px lightgrey; padding: 10px; margin-top: 40px">
+			<h4>Additional features</h4>
+			<h5>Clear query input and select category(s) to view all related products</h5>
+			<h5>If you select 'All categories' and enter no query - all available products will be shown</h5>
+		</div>
+	</div>
+
+	<div class="col-lg-8" style="padding: 0 10% 0 10%">
+		<div>
+		{% if not products is None %}
+			{% if products|length == 0 %}
+				<h2>Sorry, we can`t find anything</h2>
+			{% else %}
+				<table style="width:100%">
+					<thead style="border-bottom: solid 1px lightgrey">
+                        {% with params=request.GET.urlencode %}
+						<th>
+							<a href="{% relative_url 'order' '-name' params %}">↑</a>
+							<a href="{% relative_url 'order' 'name' params %}">↓</a>
+							Product
+						</th>
+						<th>
+							<a href="{% relative_url 'order' '-price' params %}">↑</a>
+							<a href="{% relative_url 'order' 'price' params %}">↓</a>
+							Price
+						</th>
+                    {% endwith %}
+					</thead>
+					{% for product in products %}
+						<tr>
+							<td width="80%"><a href="{% url 'product-details' product.id %}">{{product.name}}</a></td>
+							<td width="20%">{{product.price}}$</td>
+						</tr>
+					{% endfor %}
+				</table>
+			{% endif %}
+		{% endif %}
+
+		{% if products.paginator.num_pages > 1 %}
+			<div class="pagination" style="text-align: center; width: 100%;">
+			    <span class="step-links">
+                    {% with params=request.GET.urlencode %}
+			        {% if products.has_previous %}
+			            <a href="{% relative_url 'page' '1' params %}">&laquo; first</a>
+			            <a href="{% relative_url 'page' products.previous_page_number params %}">previous</a>
+			        {% endif %}
+
+			        <span class="current">
+			            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+			        </span>
+
+			        {% if products.has_next %}
+			            <a href="{% relative_url 'page' products.next_page_number params %}">next</a>
+			            <a href="{% relative_url 'page' products.paginator.num_pages params %}">last &raquo;</a>
+			        {% endif %}
+                    {% endwith %}
+			    </span>
+			</div>
+		{% endif %}
+		</div>
+	</div>
+{% endblock search %}j

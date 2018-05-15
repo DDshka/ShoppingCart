@@ -1,0 +1,28 @@
+{% extends "admin/admin_base.html" %}
+
+{% block head_title %} Product | {{ block.super }} {% endblock head_title %}
+
+{% block admin_content %} 
+	{% if products %}
+        <h1>Products</h1>
+        <table class="table">
+        {% for product in products %}
+            <tr>
+                <td>
+                     <a href="{% url 'admin-product-details' product.id %}">{{product}}</a>
+                </td>
+                <td>
+                    <form action="{% url 'delete-product' product.id%}" method="post" style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h1>No products</h1>
+    {% endif %}
+{% endblock admin_content %}

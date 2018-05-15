@@ -1,0 +1,20 @@
+{% extends "admin/admin_base.html" %}
+
+{% block head_title %} Add a product | {{ block.super }} {% endblock head_title %}
+
+{% block meta %} 
+	{{block.super}}
+    {% load wysiwyg %}
+	{% wysiwyg_setup %}
+	{% load crispy_forms_tags %}
+    <script src="/static/js/s3.js"></script>
+{% endblock meta%}
+
+{% block admin_content %}
+    {{ images_form }}
+ 	<form action="{% url 'admin-add-product' %}" method="POST" class="post-form" id="product-form">{% csrf_token %}
+	 	{{ form|crispy }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+    {% wysiwyg_editor "id_description" %}
+{% endblock admin_content %}

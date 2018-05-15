@@ -1,0 +1,30 @@
+{% extends "admin/admin_base.html" %}
+
+{% block admin_content %} 
+	<div class="col-lg-6">
+		<h2>Products ({{ products|length }})</h2>
+		<ul>
+		{% for product in products %}
+			<li><a href="{% url 'admin-product-details' product.id %}">{{product}}</a> {# ( {% for category in product.categories.all %} {{category}} {% endfor %} ) #}</li>
+
+		{% endfor %}
+		</ul>
+	</div>
+	<div class="col-lg-6">
+		<h2>Categories ({{ categories|length }})</h2>
+		<ul>
+		{% for category in categories %}
+			<li>
+				<details>
+					<summary><a href="{% url 'admin-category-details' category.id %}">{{category}}</a></summary>
+					<ul>
+						{% for product in category.product_set.all %}
+						<li><a href="{% url 'admin-product-details' product.id %}">{{product}}</a></li>
+						{% endfor %}
+					</ul>
+				</details>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endblock admin_content %}

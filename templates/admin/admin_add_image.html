@@ -1,0 +1,15 @@
+{% extends "admin/admin_base.html" %}
+
+{% block head_title %} Add an image | {{ block.super }} {% endblock head_title %}
+
+{% block meta %}
+	{{block.super}}
+	{% load crispy_forms_tags %}
+{% endblock meta%}
+
+{% block admin_content %}
+ 	<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+	 	{{ form|crispy }}
+        <button type="submit" class="save btn btn-default">Upload</button>
+    </form>
+{% endblock admin_content %}

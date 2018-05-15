@@ -1,0 +1,27 @@
+{% extends "admin/admin_base.html" %}
+
+{% block head_title %} Available products to add for {{ category }} | {{ block.super }} {% endblock head_title %}
+
+{% block admin_content %}
+	{% if products %}
+		<h1>Available products for {{category.name}}</h1>
+		<table class="table">
+			{% for product in products %}
+                <tr>
+                    <td><a href="{% url 'admin-product-details' product.id %}">{{product}}</a></td>
+                    <td>
+                         <form action="{% url 'add-product-to-category' category.id product.id%}" method="post" style="display: inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2>No available products for {{category.name}} category</h2>
+	{% endif %} 
+
+{% endblock admin_content %}

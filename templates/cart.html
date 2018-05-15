@@ -1,0 +1,37 @@
+{% extends "public_base.html" %}
+
+{% block meta %}
+    {{ block.super }}
+    {% load bleach_tags %}
+{% endblock meta %}
+
+{% block head_title %} Cart | {{ block.super }} {% endblock head_title %}
+
+{% block public_content %}
+    {% if products %}
+    	<table class="table" style="margin-top: 20px">
+        {% for product in products  %}
+			<tr>
+                <td>
+                    <a href="{% url 'product-details' product.id %}">{{product.name}}</a>
+                </td>
+                <td>
+                    {{ product.price }}
+                </td>
+                <td>
+                    <form action="{% url 'delete-from-cart' forloop.counter0 %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+		{% endfor %}
+        </table>
+
+        <h2>Total:<b>{{ total }}</b> </h2>
+    {% else %}
+        <h2>No products in your cart for now</h2>
+    {% endif %}
+{% endblock public_content %}

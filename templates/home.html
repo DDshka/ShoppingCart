@@ -1,0 +1,24 @@
+{% extends "public_base.html" %}
+
+{% block meta %}
+    {{ block.super }}
+{% endblock %}
+
+{% block public_content %}
+	<div class="col-lg-3">
+		<h3>Categories</h3>
+		{% if not categories %}
+			<p>No categories yet</p>
+		{% else %}
+			<ul class="list-unstyled">
+				{% for category in categories %}
+					<li><a href="{% url 'category-details' category.id %}">{{category.name}}</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	</div>
+
+    <div class="col-lg-9">
+        {% include 'snippets/product_view.html' with products=products %}
+    </div>
+{% endblock public_content%}

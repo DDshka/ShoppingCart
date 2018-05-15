@@ -1,0 +1,32 @@
+{% block meta %}
+    {% load templatehelpers %}
+    {% load static %}
+{% endblock meta %}
+
+{% for product in products %}
+    {% if forloop.counter|dwr:4 == 1 %}
+        <div class="row">
+    {% endif %}
+        <div class="col-lg-3" style="text-align: center; padding: 20px;">
+            <div style="padding: 20px; display: block; box-shadow: 0 0 10px rgba(0,0,0,0.5); ">
+                {% with image=product.primary_image %}
+                {% if product.primary_image %}
+                    <img src="{{ image.file.url }}" alt="{{ product.name }}" style="max-width: 100%; max-height: 100%">
+                {% else %}
+                    <img src="{% static 'stuff/No_image_available.svg' %}" alt="No image" style="max-width: 100%; max-height: 100%">
+                {% endif %}
+                {% endwith %}
+                <span>
+                    <a href="{% url 'product-details' product.id %}">{{product.name}}</a>
+                </span>
+                <form action="{% url 'add-to-cart' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="product" value="{{ product.id }}">
+                    <button class="btn btn-success" style="width: 100%">Buy</button>
+                </form>
+            </div>
+        </div>
+    {% if forloop.counter|dwr:4 == 0 %}
+        </div>
+    {% endif %}
+{% endfor %}

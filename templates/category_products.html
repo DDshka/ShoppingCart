@@ -1,0 +1,16 @@
+{% extends "public_base.html" %}
+
+{% block meta %}
+	{{block.super}}
+    {% load bleach_tags %}
+{% endblock meta %}
+
+{% block head_title %} {{ category }} | {{ block.super }} {% endblock head_title %}
+
+{% block public_content %} 
+	<h1>{{category}}</h1>
+	<div class="row">
+        {{category.description|bleach}}
+	</div>
+	{% include 'snippets/product_view.html' with products=products %}
+{% endblock public_content %}
