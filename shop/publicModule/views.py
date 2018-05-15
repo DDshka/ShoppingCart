@@ -3,7 +3,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.views import View
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView
 from django.db.models import Q
 
 from shop.abstracts.views import AbstractProductView, AbstractCategoryProductsView
@@ -34,8 +34,6 @@ class ProductView(AbstractProductView):
   def get_context_data(self, product_id: int):
     context = super().get_context_data(product_id)
     context['form'] = AddToCartForm(initial={"product": product_id})
-    import logging
-    logging.debug("HELLO")
     return context
 
 

@@ -62,5 +62,5 @@ urlpatterns = [
       name="update-category"),
 
   url(r'^addUser$', AddUser.as_view(),
-      name="add-user")
+      name="admin-add-user")
 ]
