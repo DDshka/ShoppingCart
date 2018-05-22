@@ -14,16 +14,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import include, url
-from django.conf.urls.static import static
+from django.contrib import admin
 
-from ShoppingCart import settings
+from shop.authModule.methods import is_admin
+from shop.authModule.urls import login_url
 from shop.rest.router import router
+from shop.utils.decorator_include import decorator_include
 
 urlpatterns = [
-  # url(r'^admin/', admin.site.urls),
+  url(r'^admin/', admin.site.urls),
 
-  url(r'^adminWebPage/', include("shop.adminModule.urls")),
+  url(r'^adminWebPage/', decorator_include(
+    "shop.adminModule.urls",
+    is_admin(login_url=login_url))
+  ),
+
   url(r'^', include("shop.publicModule.urls")),
+  url(r'^', include("shop.authModule.urls")),
 
   url(r'^api-auth/', include('rest_framework.urls')),
   url(r'^api/', include(router.urls)),

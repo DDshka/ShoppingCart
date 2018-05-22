@@ -1,7 +1,49 @@
 from django import forms
+from django.contrib.auth.models import User
 
 from shop.validators import validate_image_file
 from .models import *
+
+
+class UserRegisterForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ('username', 'password')
+
+  def save(self, commit=True):
+    user = super(UserRegisterForm, self).save(commit=False)
+    user.set_password(self.cleaned_data['password'])
+    user.save()
+
+    return user
+
+
+class UserLoginForm(forms.ModelForm):
+  class Meta:
+    model = User
+    fields = ('username', 'password')
+
+  __request = None
+
+  def __init__(self, *args, **kwargs):
+    if args:
+      request = args[0]
+      self.__request = request
+      super(UserLoginForm, self).__init__(request.POST, **kwargs)
+    else:
+      super(UserLoginForm, self).__init__(*args, **kwargs)
+
+  def clean(self):
+    super(UserLoginForm, self)
+
+    from shop.authModule.methods import auth_user
+    username = self.cleaned_data.get('username')
+    password = self.cleaned_data.get('password')
+    logged = auth_user(self.__request, username, password)
+
+    if not logged:
+      from django.core.exceptions import ValidationError
+      raise ValidationError('Wrong authentication. Provided data may be wrong or such user simply does not exist')
 
 
 class CategoryForm(forms.ModelForm):

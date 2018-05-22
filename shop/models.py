@@ -75,11 +75,6 @@ class Product(BaseModel):
       return []
 
 
-class User(BaseModel):
-  id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-  info = models.TextField()
-
-
 class CustomSession(AbstractBaseSession):
   # class Meta(AbstractBaseSession.Meta):
   #   db_table = 'django_session'

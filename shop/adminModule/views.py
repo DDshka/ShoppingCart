@@ -217,3 +217,4 @@ class AddUser(CreateView):
   model = User
   fields = ('info',)
   template_name = 'admin/admin_add_image.html'
+  success_url = reverse_lazy('admin-home')
