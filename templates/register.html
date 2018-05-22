@@ -1,0 +1,15 @@
+{% extends "public_base.html" %}
+
+{% block head_title %} Register | {{ block.super }} {% endblock head_title %}
+
+{% block meta %} 
+	{{block.super}}
+	{% load crispy_forms_tags %}
+{% endblock meta%}
+
+{% block public_content %}
+ 	<form action="{% url 'register' %}" method="POST">{% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="save btn btn-primary">Log in</button>
+    </form>
+{% endblock public_content %}
